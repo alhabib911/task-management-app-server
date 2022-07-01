@@ -113,14 +113,31 @@ async function run() {
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
+        $set: updateTask,
         $set: { role: 'notcompleted' },
-        // $set: updateTask,
 
 
       };
       const result = await AddTaskCollection.updateOne(filter, updateDoc, options)
       res.send(result)
     })
+
+    // MAKE incomplete task
+    app.put('/tasks/:id', async (req, res) => {
+      const id = req.params.id;
+      const updateTask = req.body;
+      console.log(updateTask);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: updateTask,
+
+
+      };
+      const result = await AddTaskCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
+
 
     // Update Task for ui show
     app.get('/task/:id', async (req, res) => {
