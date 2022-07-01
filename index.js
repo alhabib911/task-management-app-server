@@ -37,7 +37,8 @@ async function run() {
     await client.connect();
     const userCollection = client.db('TaskManagement').collection('User')
     const AddTaskCollection = client.db('TaskManagement').collection('Task')
-    const AddCompleteTask = client.db('TaskManagement').collection('CompleteTask')
+    const AddTaskCategory = client.db('TaskManagement').collection('TaskCategory')
+    const AddCategoryNoteTaskCollection = client.db('TaskManagement').collection('CategoryNote')
 
 
 
@@ -86,13 +87,41 @@ async function run() {
     })
 
 
-    //    // Add new Complete Task
-    // app.post('/complete-task', async (req, res) => {
-    //   const newTask = req.body
-    //   console.log('add', newTask)
-    //   const result = await AddCompleteTask.insertOne(newTask)
-    //   res.send(result)
-    // })
+
+    // MAKE A complete task
+    app.put('/task/complete/:id', async (req, res) => {
+      const id = req.params.id;
+      const updateTask = req.body;
+      console.log(updateTask);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: { role: 'completed' },
+        // $set: updateTask,
+
+
+      };
+      const result = await AddTaskCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
+
+    // MAKE incomplete task
+    app.put('/task/:id', async (req, res) => {
+      const id = req.params.id;
+      const updateTask = req.body;
+      console.log(updateTask);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: { role: 'notcompleted' },
+        // $set: updateTask,
+
+
+      };
+      const result = await AddTaskCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
+
 
     // Update Task
     app.put('/task/:id', async (req, res) => {
@@ -123,8 +152,61 @@ async function run() {
       const result = await AddTaskCollection.deleteOne(query)
       res.send(result)
     })
+    // Delete Complete Task
+    app.delete('/task/complete/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await AddTaskCollection.deleteOne(query)
+      res.send(result)
+    })
+
+    // Add Task Category
+    app.post('/categorydetails', async (req, res) => {
+      const newTaskCategory = req.body
+      console.log('add', newTaskCategory)
+      const result = await AddTaskCategory.insertOne(newTaskCategory)
+      res.send(result)
+    })
+
+    // GET Task Category
+    app.get('/categorydetails', async (req, res) => {
+      const query = {}
+      const cursor = AddTaskCategory.find(query)
+      const TaskCategory = await cursor.toArray()
+      res.send(TaskCategory)
+    })
+
+    // Delete Task Category
+    app.delete('/categorydetails/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await AddTaskCategory.deleteOne(query)
+      res.send(result)
+    })
+
+    // Add Category Note
+    app.post('/categorynotedetails', async (req, res) => {
+      const newCategoryNote = req.body
+      console.log('add', newCategoryNote)
+      const result = await AddCategoryNoteTaskCollection.insertOne(newCategoryNote)
+      res.send(result)
+    })
 
 
+    // GET Category Note
+    app.get('/categorynotedetails', async (req, res) => {
+      const query = {}
+      const cursor = AddCategoryNoteTaskCollection.find(query)
+      const CategoryNote = await cursor.toArray()
+      res.send(CategoryNote)
+    })
+    // Delete Category Note
+    app.delete('/categorynotedetails/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await AddCategoryNoteTaskCollection.deleteOne(query)
+      res.send(result)
+    })
   }
   finally {
 
