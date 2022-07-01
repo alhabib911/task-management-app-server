@@ -114,7 +114,7 @@ async function run() {
       const options = { upsert: true };
       const updateDoc = {
         $set: { role: 'notcompleted' },
-        $set: updateTask,
+        // $set: updateTask,
 
 
       };
