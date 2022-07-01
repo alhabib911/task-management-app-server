@@ -109,12 +109,21 @@ async function run() {
       res.send(result);
     })
     // Update Task for ui show
-    app.get('/task/:id', async(req, res) => {
-      const id =req.params.id
-      const query = {_id: ObjectId(id)}
-      const result =await AddTaskCollection.findOne(query)
+    app.get('/task/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await AddTaskCollection.findOne(query)
       res.send(result)
-  })
+    })
+
+    // Delete Task
+    app.delete('/task/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await AddTaskCollection.deleteOne(query)
+      res.send(result)
+    })
+
 
   }
   finally {
