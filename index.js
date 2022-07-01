@@ -114,7 +114,7 @@ async function run() {
       const options = { upsert: true };
       const updateDoc = {
         $set: { role: 'notcompleted' },
-        // $set: updateTask,
+        $set: updateTask,
 
 
       };
@@ -122,21 +122,6 @@ async function run() {
       res.send(result)
     })
 
-
-    // Update Task
-    app.put('/task/:id', async (req, res) => {
-      const id = req.params.id;
-      const updateTask = req.body;
-      console.log(updateTask);
-      const filter = { _id: ObjectId(id) };
-      const options = { upsert: true };
-      const updatedDoc = {
-        $set:
-          updateTask,
-      };
-      const result = await AddTaskCollection.updateOne(filter, updatedDoc, options);
-      res.send(result);
-    })
     // Update Task for ui show
     app.get('/task/:id', async (req, res) => {
       const id = req.params.id
